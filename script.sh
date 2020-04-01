@@ -1,7 +1,6 @@
 #!/usr/bin/bash
-generate_ui_for_ssh_authorized_keys(){
-   output="ssh authorized keys were provided via ${1} for users: ${2}"
-   echo "$(echo -n $output | head -c -1)" > /dev/stderr
+generate_issue_message(){
+   echo "ssh authorized keys were provided via ${1} for users: ${2}"
 }
 main() {
 
@@ -30,10 +29,10 @@ main() {
     fi
     output=
     if [ "$ignitionusers" != '' ]; then
-        output+="$(generate_ui_for_ssh_authorized_keys Ignition "$ignitionusers")"
+        output+="$(generate_ui_for_ssh_authorized_keys Ignition "${ignitionusers:0:-1}")"
     fi
     if [ "$afterburnusers" != '' ]; then
-        output+="$(generate_ui_for_ssh_authorized_keys Afterburn "$afterburnusers")"
+        output+="$(generate_ui_for_ssh_authorized_keys Afterburn "${afterburnusers:0:-1}")"
     fi
     if [ -n $output ]; then
         echo "$output" > /run/console-login-helper-messages/issue.d/30_ssh_authorized_keys.issue
