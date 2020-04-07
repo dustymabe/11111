@@ -27,12 +27,17 @@ main() {
     if [ -f $userhome/.ssh/authorized_keys.d/afterburn ]; then
         afterburnusers+=" $user,"
     fi
-    output=
+
+    # Pull trailing comma off the end of each string of users
+    ignitionusers=${ignitionusers:0:-1}
+    afterburnusers=${afterburnusers:0:-1}
+    
+    output=''
     if [ "$ignitionusers" != '' ]; then
-        output+="$(generate_ui_for_ssh_authorized_keys Ignition "${ignitionusers:0:-1}")"
+        output+="$(generate_ui_for_ssh_authorized_keys Ignition "${ignitionusers}")"
     fi
     if [ "$afterburnusers" != '' ]; then
-        output+="$(generate_ui_for_ssh_authorized_keys Afterburn "${afterburnusers:0:-1}")"
+        output+="$(generate_ui_for_ssh_authorized_keys Afterburn "${afterburnusers}")"
     fi
     if [ -n $output ]; then
         echo "$output" > /run/console-login-helper-messages/issue.d/30_ssh_authorized_keys.issue
